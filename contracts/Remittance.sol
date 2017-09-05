@@ -7,6 +7,7 @@ contract Remittance {
 	uint securePassword;
 	uint deadline;
 	uint start;
+	bool alreadyPaid;
 
   event LogPayment(uint amount);
 	event LogWithdrawal(uint blockNumber);
@@ -44,7 +45,9 @@ contract Remittance {
 	function withdraw(uint password) public returns(bool) {
 		  require(this.balance >= 0);
 			require(msg.sender == carol);
+			require(!alreadyPaid);
 			if (securePassword == password) {
+				alreadyPaid = true;
 				LogWithdrawal(block.number);
 				carol.transfer(this.balance);
 				return true;
